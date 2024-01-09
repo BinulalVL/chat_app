@@ -50,6 +50,7 @@ class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
     final width=MediaQuery.of(context).size.width;
+    final height=MediaQuery.of(context).size.height;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
 
@@ -57,7 +58,7 @@ class _SecondPageState extends State<SecondPage> {
       body: Column(
         children: [
           Container(
-            height: 450,
+            height: height/1.28,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Users')
@@ -71,40 +72,39 @@ class _SecondPageState extends State<SecondPage> {
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: document.length,
+                    padding:EdgeInsets.all(20) ,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment:
-                              document[index]['name'] == widget.name
-                                  ? CrossAxisAlignment.end
-                                  : CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              child: Container(constraints:BoxConstraints(maxWidth: width*0.7) ,
-                              
-                                decoration: BoxDecoration(
-                                  color: document[index]['name'] == widget.name
-                                      ? Colors.green
-                                      : Colors.blue,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      document[index]['name'],
-                                    ),
-                                    Center(child: Text(document[index]['text'])),
-                                  ],
-                                ),
-                              ),
+                      return Column(
+                        crossAxisAlignment:
+                            document[index]['name'] == widget.name
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10)
+                            ,margin: EdgeInsets.all(15),
+
+                            constraints:BoxConstraints(maxWidth: width*0.7) ,
+                            decoration: BoxDecoration(
+                              color: document[index]['name'] == widget.name
+                                  ? Colors.green
+                                  : Colors.blue,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
                             ),
-                            SizedBox(
-                              height: 15,
+                            child: Column(
+                              children: [
+                                Text(
+                                  document[index]['name'],
+                                ),
+                                Text(document[index]['text']),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
                       );
                     },
                   );

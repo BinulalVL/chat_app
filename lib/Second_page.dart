@@ -12,6 +12,14 @@ class SecondPage extends StatefulWidget {
 }
 
 class _SecondPageState extends State<SecondPage> {
+  @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   scrollToBottom();
+  //   super.initState();
+  // }
+  @override
+
   ScrollController _scrollController = ScrollController();
   TextEditingController controller = TextEditingController();
   int value = 0;
@@ -55,7 +63,7 @@ class _SecondPageState extends State<SecondPage> {
       //resizeToAvoidBottomInset: false,
 
       appBar: AppBar(title: Text(widget.name!)),
-      body: Column(
+      body: ListView(
         children: [
           Container(
             height: height/1.28,
@@ -129,9 +137,12 @@ class _SecondPageState extends State<SecondPage> {
               onPressed: () {
                 msg = controller.text;
                 print(msg);
-                scrollToBottom();
-                sendMessage();
-                clearMessage();
+
+                setState(() {
+                  scrollToBottom();
+                  sendMessage();
+                  clearMessage();
+                });
 
                 push();
               },

@@ -25,6 +25,8 @@ class _SecondPageState extends State<SecondPage> {
   int value = 0;
   var msg;
   var length;
+
+
   void push() {
     value++;
     var data = FirebaseFirestore.instance.collection('Users').add({
@@ -35,8 +37,7 @@ class _SecondPageState extends State<SecondPage> {
   }
 
   void scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
+    _scrollController.animateTo(0,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
     );
@@ -67,6 +68,7 @@ class _SecondPageState extends State<SecondPage> {
         children: [
           Container(
             height: height/1.28,
+           // color: Colors.blue,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Users')
@@ -77,7 +79,9 @@ class _SecondPageState extends State<SecondPage> {
                   return Center(child: CircularProgressIndicator());
                 } else {
                   List<DocumentSnapshot> document = snapshot.data!.docs;
+                  document=document.reversed.toList();
                   return ListView.builder(
+                    reverse: true,
                     controller: _scrollController,
                     itemCount: document.length,
                     padding:EdgeInsets.all(20) ,
@@ -89,8 +93,8 @@ class _SecondPageState extends State<SecondPage> {
                                 : CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10)
-                            ,margin: EdgeInsets.all(15),
+                            padding: EdgeInsets.all(8)
+                            ,margin: EdgeInsets.only(right:5),
 
                             constraints:BoxConstraints(maxWidth: width*0.7) ,
                             decoration: BoxDecoration(
@@ -120,34 +124,43 @@ class _SecondPageState extends State<SecondPage> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0,left: 8,right: 5),
+            child: Container(
+              child: Row(children: [
+                Expanded(
+                    child: SizedBox(
+                      height: height/16,
+                      child: TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                            border:
+                            OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                            hintText: 'Message'),
+                      ),
+                    )),
+                IconButton(
+                    onPressed: () {
+                      msg = controller.text;
+                      print(msg);
+
+                      setState(() {
+                        scrollToBottom();
+                        sendMessage();
+                        clearMessage();
+                      });
+
+                      push();
+                    },
+                    icon:Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.send),
+                    )),
+
+              ]),
+            ),
+          )
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        padding: EdgeInsets.all(10.0),
-        child: Row(children: [
-          Expanded(
-              child: TextField(
-            controller: controller,
-            decoration: InputDecoration(
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                hintText: 'Message'),
-          )),
-          ElevatedButton(
-              onPressed: () {
-                msg = controller.text;
-                print(msg);
-
-                setState(() {
-                  scrollToBottom();
-                  sendMessage();
-                  clearMessage();
-                });
-
-                push();
-              },
-              child: Text('send'))
-        ]),
       ),
     );
   }

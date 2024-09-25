@@ -10,6 +10,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   Future<void> LoginUser(String email, String password) async {
     try {
       await FirebaseAuth.instance
